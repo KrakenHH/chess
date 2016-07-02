@@ -1,1 +1,1 @@
-full functional chess game
+fully functional chess game
