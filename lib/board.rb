@@ -15,11 +15,11 @@
 
   def display_board
     board.each_with_index do |row, index|
-      print "#{8-index}"
+      print "#{7-index}"
       row.each { |ele| print "|#{ele == ' ' ? ele : ele.get_unicode }" }
       print "|\n"
     end
-    print "  A B C D E F G H\n\n"
+    print "  0 1 2 3 4 5 6 7\n\n"
   end
 
   def set_board_coord(x, y, value)
@@ -31,23 +31,43 @@
     p = King.new("white")
   end
 
-  #uses duck type
+  #return array of possible human (x, y) coordinates a specific position can move to
   def get_possible_moves(x, y)
     piece = get_board_coord(x, y)
+    return get_pawn_possible_moves(x, y) if piece.is_a?(Pawn)
     lambs = piece.possible_moves.values
     arr = []
     lambs.each do |lamb|
       index = 1
       loop do
-        new_arr = []
-        new_arr << lamb.call(x, y, index)[:x]
-        new_arr << lamb.call(x, y, index)[:y]
-        break if new_arr.any? { |ele| ele < 0 } || lamb.call(x, y, index)[:breaker] || get_board_coord(new_arr[0], new_arr[1]) != ' '
+        new_coord_hash = lamb.call(x, y, index)
+        new_arr = [new_coord_hash[:x], new_coord_hash[:y]]
+        arr << new_arr if !new_arr.any? { |ele| ele < 0 || ele > 7 }  && get_board_coord(new_arr[0], new_arr[1]).respond_to?(:color) && get_board_coord(new_coord_hash[:x], new_coord_hash[:y]).color != piece.color
+        break if !(0..7).include?(new_arr[0]) || !(0..7).include?(new_arr[1]) || lamb.call(x, y, index)[:breaker] || get_board_coord(new_coord_hash[:x], new_coord_hash[:y]) != ' '
         arr << new_arr
         index += 1
       end
     end
     arr
+  end
+
+  #special case for pawn
+  def get_pawn_possible_moves(x, y)
+    pos_move_hash = get_board_coord(x, y).possible_moves
+    arr = []
+    index = 0
+    pos_move_hash.each do |key, value|
+      case index
+      when 0
+        arr << [value.call(x,y)[:x], value.call(x,y)[:y]] if get_board_coord(value.call(x,y)[:x],value.call(x, y)[:y]) == ' '
+      when 1 
+        arr << [value.call(x,y)[:x], value.call(x,y)[:y]] unless value.call(x,y)[:no_put] || arr.empty?
+      when 2,3
+        arr << [value.call(x,y)[:x], value.call(x,y)[:y]] if get_board_coord(value.call(x,y)[:x],value.call(x,y)[:y]).respond_to?(:color) && get_board_coord(value.call(x,y)[:x],value.call(x,y)[:y]).color != get_board_coord(x,y).color
+      end
+      index += 1  
+    end
+    arr 
   end
 
   
@@ -79,7 +99,7 @@
     board[7][5] = Bishop.new('white')
     board[7][6] = Knight.new('white')
     board[7][7] = Rook.new('white')
-    #board[6].fill { |x| Pawn.new('white') }
+    board[6].fill { |x| Pawn.new('white') }
     board
   end
 
@@ -88,5 +108,3 @@ end
 b = Board.new
 
 puts b.display_board
-puts b.get_possible_moves(0,0).inspect
-
