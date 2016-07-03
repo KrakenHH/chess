@@ -23,16 +23,20 @@ class Pawn
 
   def get_white_possible_moves
     {
-      up:          lambda { |x, y, index| { x: x, y: y+1, breaker: index > 1 ? true : false } },
-      double_up:   lambda { |x, y, index| { x: x, y: y+2, breaker: index > 1 || y != 1 ? true : false } }
+      up:          lambda { |x, y| { x: x, y: y+1 } },
+      double_up:   lambda { |x, y| { x: x, y: y+2, no_put: y != 1 ? true : false } },
+      up_left:     lambda { |x, y| { x: x-1, y: y+1 } },
+      up_right:    lambda { |x, y| { x: x+1, y: y+1 } }
     }
   end
 
 
   def get_black_possible_moves
     {
-      down:          lambda { |x, y, index| { x: x, y: y-1, breaker: index > 1 ? true : false } },
-      double_down:   lambda { |x, y, index| { x: x, y: y-2, breaker: index > 1 || y != 6 ? true : false } }
+      down:          lambda { |x, y| { x: x, y: y-1 } },
+      double_down:   lambda { |x, y| { x: x, y: y-2, no_put: y != 6 ? true : false } },
+      down_left:     lambda { |x, y| { x: x-1, y: y-1 } },
+      down_right:    lambda { |x, y| { x: x+1, y: y-1 } }
     }
   end
 
