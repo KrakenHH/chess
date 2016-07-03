@@ -15,20 +15,16 @@
 
   def display_board
     board.each_with_index do |row, index|
-      print "#{7-index}"
+      print "#{8-index}"
       row.each { |ele| print "|#{ele == ' ' ? ele : ele.get_unicode }" }
       print "|\n"
     end
-    print "  0 1 2 3 4 5 6 7\n\n"
+    print "  a b c d e f g h\n\n"
   end
 
   def set_board_coord(x, y, value)
     machine_coords = convert_human_coord_to_machine(x, y)
     board[machine_coords[:x]][machine_coords[:y]] = value
-  end
-
-  def new_king
-    p = King.new("white")
   end
 
   #return array of possible human (x, y) coordinates a specific position can move to
@@ -70,7 +66,61 @@
     arr 
   end
 
-  
+  def checkmate?(color)
+    king_coords = find_king_coords(color)
+    enemy_pos_move_coords = get_enemy_possible_moves(color)
+    times_includes = 0
+    enemy_pos_move_coords.each { |coord| times_includes += 1 if coord == king_coords }
+    return true if times_includes > 1
+    false
+  end
+
+  #returns true if a king of a specific color is in check
+  def check?(color)
+    king_coords = find_king_coords(color)
+    enemy_pos_move_coords = get_enemy_possible_moves(color)
+    enemy_pos_move_coords.include?(king_coords)  
+  end
+
+  #returns array of possible enemy moves [x, y]
+  def get_enemy_possible_moves(color)
+    enemy_piece_coords = get_enemy_piece_positions(color)
+    enemy_possible_move_coords = []
+    enemy_piece_coords.each { |coord| get_possible_moves(coord[0],coord[1]).each { |pos_move| enemy_possible_move_coords << pos_move } }
+    enemy_possible_move_coords
+  end
+
+  #returns an array of [x, y] arays enemy piece positions
+  def get_enemy_piece_positions(color)
+    x = 0
+    y = 0
+    pieces_coords = []
+    until y == 8
+      pieces_coords << [x, y] if get_board_coord(x, y).respond_to?(:color) && get_board_coord(x, y).color != color
+      x+=1
+      if x == 8
+        x = 0
+        y +=1
+      end
+      
+    end
+    pieces_coords     
+  end
+
+  #returns [x, y] of a specific king color
+  def find_king_coords(color)
+    x = 0
+    y = 0
+    until get_board_coord(x, y).is_a?(King) && get_board_coord(x, y).color == color
+      x += 1
+      if x == 8
+        x = 0
+        y += 1
+      end
+    end
+    [x, y]
+  end
+
   private
 
   def convert_human_coord_to_machine(x, y)
@@ -106,5 +156,6 @@
 end
 
 b = Board.new
-
-puts b.display_board
+#puts b.get_enemy_piece_positions('black').inspect
+b.display_board
+puts b.checkmate?("white")
