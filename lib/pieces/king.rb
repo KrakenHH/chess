@@ -13,9 +13,11 @@ class King
 
   def possible_moves
     { 
+      left:          lambda { |x, y, index| { x: x-1, y: y, breaker: index > 1 ? true : false } },
       up_left:       lambda { |x, y, index| { x: x-1, y: y+1, breaker: index > 1 ? true : false } },
       up:            lambda { |x, y, index| { x: x, y: y+1, breaker: index > 1 ? true : false } },
       up_right:      lambda { |x, y, index| { x: x+1, y: y+1, breaker: index > 1 ? true : false } },
+      right:         lambda { |x, y, index| { x: x+1, y: y, breaker: index > 1 ? true : false } },
       down_right:    lambda { |x, y, index| { x: x+1, y: y-1, breaker: index > 1 ? true : false } },
       down:          lambda { |x, y, index| { x: x, y: y-1, breaker: index > 1 ? true : false } },
       down_left:     lambda { |x, y, index| { x: x-1, y: y-1, breaker: index > 1 ? true : false } },
