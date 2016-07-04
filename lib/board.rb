@@ -66,12 +66,42 @@
     arr 
   end
 
+  def get_piece_positions(color)
+    x = 0
+    y = 0
+    pieces_coords = []
+    until y == 8
+      pieces_coords << [x, y] if get_board_coord(x, y).respond_to?(:color) && get_board_coord(x, y).color == color
+      x+=1
+      if x == 8
+        x = 0
+        y +=1
+      end
+      
+    end
+    pieces_coords     
+  end
+
+#if in check, do all the possible moves of a specific color, check if in check each time if you set the board to each of there
   def checkmate?(color)
-    king_coords = find_king_coords(color)
-    enemy_pos_move_coords = get_enemy_possible_moves(color)
-    times_includes = 0
-    enemy_pos_move_coords.each { |coord| times_includes += 1 if coord == king_coords }
-    return true if times_includes > 1
+    apple = ' '
+    if check?(color)
+      piece_positions = get_piece_positions(color)
+      piece_positions.each do |pos|
+          possible_moves = get_possible_moves(pos[0],pos[1])
+          possible_moves.each do |dest_pos|
+            move_piece = get_board_coord(pos[0],pos[1])
+            destination_piece = get_board_coord(dest_pos[0],dest_pos[1])
+            set_board_coord(dest_pos[0],dest_pos[1], move_piece)
+            set_board_coord(pos[0],pos[1], ' ')
+            apple = false if check?(color) == false
+            set_board_coord(pos[0],pos[1], move_piece)
+            set_board_coord(dest_pos[0],dest_pos[1], destination_piece)
+            return apple if apple == false
+          end
+      end
+      return true    
+    end
     false
   end
 
@@ -155,4 +185,5 @@
 
 end
 
+b = Board.new
 

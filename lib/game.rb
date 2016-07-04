@@ -15,7 +15,9 @@ class Game
   def play
     loop do
       player_turn(white_player)
+      break if board.checkmate?(black_player.color)
       player_turn(black_player)
+      break if board.checkmate?(white_player.color)
     end
 
   end
@@ -23,8 +25,8 @@ class Game
   def player_turn(player)
     show_board
     if board.check?(player.color)
-      puts "you are in check, you must move your king out of check. Where would you like to move your king?"
-      check_move_piece(player)
+      puts "you are in check"
+      player_move_piece(player)
     else
       player_move_piece(player)
     end
@@ -34,37 +36,33 @@ class Game
     board.display_board
   end
 
-  def check_move_piece(player)
-    piece_to_move = board.find_king_coords(player.color) #coordinates
-    move_destination = player_select_valid_piece_destination #coordinates
-    move_piece = board.get_board_coord(piece_to_move[0], piece_to_move[1]) #actual piece
-    destination_piece = board.get_board_coord(move_destination[0], move_destination[1])
-    possible_moves = board.get_possible_moves(piece_to_move[0], piece_to_move[1])
-    if possible_moves.include?(move_destination)
-      board.set_board_coord(move_destination[0], move_destination[1], board.get_board_coord(piece_to_move[0] ,piece_to_move[1]))
-      board.set_board_coord(piece_to_move[0], piece_to_move[1], ' ')
-    else
-      puts "this is not a valid move"
-      check_move_piece(player)
-    end
-    if board.check?(player.color)
-      puts "you can't move here. You are still in check."
-      board.set_board_coord(move_destination[0], move_destination[1], destination_piece)
-      board.set_board_coord(piece_to_move[0], piece_to_move[1], move_piece)
-      check_move_piece(player)
-    end
+
+
+  def move_into_check_response
+    puts "You are in check if you move here. Try again."
   end
 
 
   def player_move_piece(player)
-    piece_to_move = player_select_move_piece(player)
-    move_destination = player_select_valid_piece_destination
-    possible_moves = board.get_possible_moves(piece_to_move[0],piece_to_move[1])
-    if possible_moves.include?(move_destination)
-      board.set_board_coord(move_destination[0], move_destination[1], board.get_board_coord(piece_to_move[0] ,piece_to_move[1]))
-      board.set_board_coord(piece_to_move[0], piece_to_move[1], ' ')
+    move_piece_xy = player_select_move_piece(player) #coordinates [x,y]
+    destination_xy = player_select_valid_piece_destination #coordinates [x,y]
+    move_piece = board.get_board_coord(move_piece_xy[0], move_piece_xy[1]) #move piece
+    destination_piece = board.get_board_coord(destination_xy[0], destination_xy[1]) #destinaton piece of blank
+
+    possible_moves = board.get_possible_moves(move_piece_xy[0], move_piece_xy[1])
+
+    if possible_moves.include?(destination_xy)
+      board.set_board_coord(destination_xy[0], destination_xy[1], move_piece)
+      board.set_board_coord(move_piece_xy[0], move_piece_xy[1], ' ')
     else
-      puts "this is not a valid move"
+      puts "this is not a valid move for that piece."
+      player_move_piece(player)
+    end
+    if board.check?(player.color)
+      board.set_board_coord(destination_xy[0], destination_xy[1], destination_piece)
+      board.set_board_coord(move_piece_xy[0], move_piece_xy[1], move_piece)
+      show_board
+      move_into_check_response
       player_move_piece(player)
     end
   end
@@ -113,16 +111,16 @@ class Game
   end
 
   def create_white_player
-    Player.new(get_player_name, 'white')
+    Player.new(get_player_name('White'), 'white')
   end
 
   def create_black_player
-    Player.new(get_player_name, 'black')
+    Player.new(get_player_name('Black'), 'black')
 
   end
 
-  def get_player_name
-    puts "White player, what is your name?"
+  def get_player_name(color)
+    puts "#{color} player, what is your name?"
     gets.chomp
   end
 
