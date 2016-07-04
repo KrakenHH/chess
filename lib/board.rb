@@ -155,7 +155,4 @@
 
 end
 
-b = Board.new
-#puts b.get_enemy_piece_positions('black').inspect
-b.display_board
-puts b.checkmate?("white")
+

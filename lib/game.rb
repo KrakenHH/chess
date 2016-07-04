@@ -14,17 +14,47 @@ class Game
 
   def play
     loop do
-      show_board
-      player_move_piece(white_player)
-      show_board
-      player_move_piece(black_player)
+      player_turn(white_player)
+      player_turn(black_player)
     end
 
+  end
+
+  def player_turn(player)
+    show_board
+    if board.check?(player.color)
+      puts "you are in check, you must move your king out of check. Where would you like to move your king?"
+      check_move_piece(player)
+    else
+      player_move_piece(player)
+    end
   end
 
   def show_board
     board.display_board
   end
+
+  def check_move_piece(player)
+    piece_to_move = board.find_king_coords(player.color) #coordinates
+    move_destination = player_select_valid_piece_destination #coordinates
+    move_piece = board.get_board_coord(piece_to_move[0], piece_to_move[1]) #actual piece
+    destination_piece = board.get_board_coord(move_destination[0], move_destination[1])
+    possible_moves = board.get_possible_moves(piece_to_move[0], piece_to_move[1])
+    if possible_moves.include?(move_destination)
+      board.set_board_coord(move_destination[0], move_destination[1], board.get_board_coord(piece_to_move[0] ,piece_to_move[1]))
+      board.set_board_coord(piece_to_move[0], piece_to_move[1], ' ')
+    else
+      puts "this is not a valid move"
+      check_move_piece(player)
+    end
+    if board.check?(player.color)
+      puts "you can't move here. You are still in check."
+      board.set_board_coord(move_destination[0], move_destination[1], destination_piece)
+      board.set_board_coord(piece_to_move[0], piece_to_move[1], move_piece)
+      check_move_piece(player)
+    end
+  end
+
 
   def player_move_piece(player)
     piece_to_move = player_select_move_piece(player)
