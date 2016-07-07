@@ -47,41 +47,6 @@
     arr
   end
 
-  #special case for pawn
-  def get_pawn_possible_moves(x, y)
-    pos_move_hash = get_board_coord(x, y).possible_moves
-    arr = []
-    index = 0
-    pos_move_hash.each do |key, value|
-      case index
-      when 0
-        arr << [value.call(x,y)[:x], value.call(x,y)[:y]] if get_board_coord(value.call(x,y)[:x],value.call(x, y)[:y]) == ' '
-      when 1 
-        arr << [value.call(x,y)[:x], value.call(x,y)[:y]] unless value.call(x,y)[:no_put] || arr.empty?
-      when 2,3
-        arr << [value.call(x,y)[:x], value.call(x,y)[:y]] if get_board_coord(value.call(x,y)[:x],value.call(x,y)[:y]).respond_to?(:color) && get_board_coord(value.call(x,y)[:x],value.call(x,y)[:y]).color != get_board_coord(x,y).color
-      end
-      index += 1  
-    end
-    arr 
-  end
-
-  def get_piece_positions(color)
-    x = 0
-    y = 0
-    pieces_coords = []
-    until y == 8
-      pieces_coords << [x, y] if get_board_coord(x, y).respond_to?(:color) && get_board_coord(x, y).color == color
-      x+=1
-      if x == 8
-        x = 0
-        y +=1
-      end
-      
-    end
-    pieces_coords     
-  end
-
 #if in check, do all the possible moves of a specific color, check if in check each time if you set the board to each of there
   def checkmate?(color)
     apple = ' '
@@ -112,12 +77,13 @@
     enemy_pos_move_coords.include?(king_coords)  
   end
 
-  #returns array of possible enemy moves [x, y]
-  def get_enemy_possible_moves(color)
-    enemy_piece_coords = get_enemy_piece_positions(color)
-    enemy_possible_move_coords = []
-    enemy_piece_coords.each { |coord| get_possible_moves(coord[0],coord[1]).each { |pos_move| enemy_possible_move_coords << pos_move } }
-    enemy_possible_move_coords
+
+
+#BEGINNING OF PRIVATE METHODS
+  private
+
+  def convert_human_coord_to_machine(x, y)
+    { x: 7-y, y: x }
   end
 
   #returns an array of [x, y] arays enemy piece positions
@@ -131,8 +97,7 @@
       if x == 8
         x = 0
         y +=1
-      end
-      
+      end      
     end
     pieces_coords     
   end
@@ -151,12 +116,47 @@
     [x, y]
   end
 
-  private
-
-  def convert_human_coord_to_machine(x, y)
-    { x: 7-y, y: x }
+  #returns array of possible enemy moves [x, y]
+  def get_enemy_possible_moves(color)
+    enemy_piece_coords = get_enemy_piece_positions(color)
+    enemy_possible_move_coords = []
+    enemy_piece_coords.each { |coord| get_possible_moves(coord[0],coord[1]).each { |pos_move| enemy_possible_move_coords << pos_move } }
+    enemy_possible_move_coords
   end
 
+  def get_piece_positions(color)
+    x = 0
+    y = 0
+    pieces_coords = []
+    until y == 8
+      pieces_coords << [x, y] if get_board_coord(x, y).respond_to?(:color) && get_board_coord(x, y).color == color
+      x+=1
+      if x == 8
+        x = 0
+        y +=1
+      end
+    end
+    pieces_coords     
+  end
+
+  #special case for pawn
+  def get_pawn_possible_moves(x, y)
+    pos_move_hash = get_board_coord(x, y).possible_moves
+    arr = []
+    index = 0
+    pos_move_hash.each do |key, value|
+      case index
+      when 0
+        arr << [value.call(x,y)[:x], value.call(x,y)[:y]] if get_board_coord(value.call(x,y)[:x],value.call(x, y)[:y]) == ' '
+      when 1 
+        arr << [value.call(x,y)[:x], value.call(x,y)[:y]] if !value.call(x,y)[:no_put] && !arr.empty? && get_board_coord(value.call(x,y)[:x],value.call(x, y)[:y]) == ' '
+      when 2,3
+        arr << [value.call(x,y)[:x], value.call(x,y)[:y]] if get_board_coord(value.call(x,y)[:x],value.call(x,y)[:y]).respond_to?(:color) && get_board_coord(value.call(x,y)[:x],value.call(x,y)[:y]).color != get_board_coord(x,y).color
+      end
+      index += 1  
+    end
+    arr 
+  end
 
   def create_board  
     board = Array.new(8) { Array.new(8) { ' ' } }
