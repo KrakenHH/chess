@@ -49,7 +49,7 @@
 
 #if in check, do all the possible moves of a specific color, check if in check each time if you set the board to each of there
   def checkmate?(color)
-    apple = ' '
+    placeholder = ' '
     if check?(color)
       piece_positions = get_piece_positions(color)
       piece_positions.each do |pos|
@@ -59,10 +59,10 @@
             destination_piece = get_board_coord(dest_pos[0],dest_pos[1])
             set_board_coord(dest_pos[0],dest_pos[1], move_piece)
             set_board_coord(pos[0],pos[1], ' ')
-            apple = false if check?(color) == false
+            placeholder = false if check?(color) == false
             set_board_coord(pos[0],pos[1], move_piece)
             set_board_coord(dest_pos[0],dest_pos[1], destination_piece)
-            return apple if apple == false
+            return placeholder if placeholder == false
           end
       end
       return true    
@@ -77,6 +77,12 @@
     enemy_pos_move_coords.include?(king_coords)  
   end
 
+  def pawns_to_queens
+    (0..7).each do |num|
+      set_board_coord(num,7,Queen.new('white')) if get_board_coord(num,7).is_a?(Pawn)
+      set_board_coord(num,0,Queen.new('black')) if get_board_coord(num,7).is_a?(Pawn)
+    end
+  end
 
 
 #BEGINNING OF PRIVATE METHODS
@@ -84,22 +90,6 @@
 
   def convert_human_coord_to_machine(x, y)
     { x: 7-y, y: x }
-  end
-
-  #returns an array of [x, y] arays enemy piece positions
-  def get_enemy_piece_positions(color)
-    x = 0
-    y = 0
-    pieces_coords = []
-    until y == 8
-      pieces_coords << [x, y] if get_board_coord(x, y).respond_to?(:color) && get_board_coord(x, y).color != color
-      x+=1
-      if x == 8
-        x = 0
-        y +=1
-      end      
-    end
-    pieces_coords     
   end
 
   #returns [x, y] of a specific king color
@@ -118,7 +108,7 @@
 
   #returns array of possible enemy moves [x, y]
   def get_enemy_possible_moves(color)
-    enemy_piece_coords = get_enemy_piece_positions(color)
+    enemy_piece_coords = (color == 'black' ? get_piece_positions('white') : get_piece_positions('black'))
     enemy_possible_move_coords = []
     enemy_piece_coords.each { |coord| get_possible_moves(coord[0],coord[1]).each { |pos_move| enemy_possible_move_coords << pos_move } }
     enemy_possible_move_coords
@@ -182,7 +172,6 @@
     board[6].fill { |x| Pawn.new('white') }
     board
   end
-
 end
 
 b = Board.new

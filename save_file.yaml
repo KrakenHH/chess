@@ -1,0 +1,105 @@
+--- !ruby/object:Game
+white_player: !ruby/object:Player
+  name: l
+  color: white
+black_player: !ruby/object:Player
+  name: a
+  color: black
+board: !ruby/object:Board
+  board:
+  - - !ruby/object:Rook
+      color: black
+    - !ruby/object:Knight
+      color: black
+    - !ruby/object:Bishop
+      color: black
+    - !ruby/object:Queen
+      color: black
+    - !ruby/object:King
+      color: black
+    - !ruby/object:Bishop
+      color: black
+    - !ruby/object:Knight
+      color: black
+    - !ruby/object:Rook
+      color: black
+  - - ! ' '
+    - ! ' '
+    - !ruby/object:Pawn
+      color: black
+    - !ruby/object:Pawn
+      color: black
+    - !ruby/object:Pawn
+      color: black
+    - !ruby/object:Pawn
+      color: black
+    - !ruby/object:Pawn
+      color: black
+    - !ruby/object:Pawn
+      color: black
+  - - ! ' '
+    - !ruby/object:Pawn
+      color: black
+    - ! ' '
+    - ! ' '
+    - ! ' '
+    - ! ' '
+    - ! ' '
+    - ! ' '
+  - - !ruby/object:Pawn
+      color: black
+    - ! ' '
+    - ! ' '
+    - ! ' '
+    - ! ' '
+    - ! ' '
+    - ! ' '
+    - ! ' '
+  - - !ruby/object:Pawn
+      color: white
+    - ! ' '
+    - ! ' '
+    - ! ' '
+    - ! ' '
+    - ! ' '
+    - ! ' '
+    - ! ' '
+  - - ! ' '
+    - !ruby/object:Pawn
+      color: white
+    - ! ' '
+    - ! ' '
+    - ! ' '
+    - ! ' '
+    - ! ' '
+    - ! ' '
+  - - ! ' '
+    - ! ' '
+    - !ruby/object:Pawn
+      color: white
+    - !ruby/object:Pawn
+      color: white
+    - !ruby/object:Pawn
+      color: white
+    - !ruby/object:Pawn
+      color: white
+    - !ruby/object:Pawn
+      color: white
+    - !ruby/object:Pawn
+      color: white
+  - - !ruby/object:Rook
+      color: white
+    - !ruby/object:Knight
+      color: white
+    - !ruby/object:Bishop
+      color: white
+    - !ruby/object:Queen
+      color: white
+    - !ruby/object:King
+      color: white
+    - !ruby/object:Bishop
+      color: white
+    - !ruby/object:Knight
+      color: white
+    - !ruby/object:Rook
+      color: white
