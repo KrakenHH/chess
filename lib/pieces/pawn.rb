@@ -30,7 +30,6 @@ class Pawn
     }
   end
 
-
   def get_black_possible_moves
     {
       down:          lambda { |x, y| { x: x, y: y-1 } },

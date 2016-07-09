@@ -23,8 +23,8 @@ board: !ruby/object:Board
       color: black
     - !ruby/object:Rook
       color: black
-  - - ! ' '
-    - ! ' '
+  - - " "
+    - " "
     - !ruby/object:Pawn
       color: black
     - !ruby/object:Pawn
@@ -37,44 +37,44 @@ board: !ruby/object:Board
       color: black
     - !ruby/object:Pawn
       color: black
-  - - ! ' '
+  - - " "
     - !ruby/object:Pawn
       color: black
-    - ! ' '
-    - ! ' '
-    - ! ' '
-    - ! ' '
-    - ! ' '
-    - ! ' '
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
   - - !ruby/object:Pawn
       color: black
-    - ! ' '
-    - ! ' '
-    - ! ' '
-    - ! ' '
-    - ! ' '
-    - ! ' '
-    - ! ' '
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
   - - !ruby/object:Pawn
       color: white
-    - ! ' '
-    - ! ' '
-    - ! ' '
-    - ! ' '
-    - ! ' '
-    - ! ' '
-    - ! ' '
-  - - ! ' '
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+  - - " "
     - !ruby/object:Pawn
       color: white
-    - ! ' '
-    - ! ' '
-    - ! ' '
-    - ! ' '
-    - ! ' '
-    - ! ' '
-  - - ! ' '
-    - ! ' '
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+    - " "
+  - - " "
+    - " "
     - !ruby/object:Pawn
       color: white
     - !ruby/object:Pawn

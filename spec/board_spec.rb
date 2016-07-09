@@ -83,15 +83,15 @@ describe Board do
 
   describe "#checkmate?(color)" do
     it "returns true if king is in checkmate" do
-      expect(board.checkmate?('black')).to be_false
+      expect(board.checkmate?('black')).to be_falsey
       board.set_board_coord(2,2,King.new('black'))
       board.set_board_coord(2,4,Queen.new('white'))
-      expect(board.checkmate?('black')).to be_true
+      expect(board.checkmate?('black')).to be_truthy
     end
 
     it "returns false if the king is only in check" do
       board.set_board_coord(6,3,Pawn.new('white'))
-      expect(board.checkmate?('black')).to be_false
+      expect(board.checkmate?('black')).to be_falsey
     end
 
   end
@@ -99,7 +99,7 @@ describe Board do
   describe "#check(color)" do
     it "returns true if the king is in check" do
       board.set_board_coord(6,3,Pawn.new('white'))
-      expect(board.checkmate?('black')).to be_false
+      expect(board.checkmate?('black')).to be_falsey
     end
 
   end

@@ -85,7 +85,6 @@
   end
 
 
-#BEGINNING OF PRIVATE METHODS
   private
 
   def convert_human_coord_to_machine(x, y)
